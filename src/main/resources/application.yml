@@ -6,3 +6,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/voting-session-manager
     username: application
     password: application
+
+lombok.nonNull.exceptionType: IllegalArgumentException
