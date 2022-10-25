@@ -1,6 +1,6 @@
-package br.com.challenge.votingsessionmanager.api.session;
+package br.com.challenge.votingsessionmanager.api.vote;
 
-import br.com.challenge.votingsessionmanager.api.session.handle.CreateSessionHandle;
+import br.com.challenge.votingsessionmanager.api.vote.handle.CreateVoteHandle;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -10,15 +10,15 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
-public class SessionApiRoute {
-    private static final String SESSION_URL_PATH = "/topics/{topic_id}/sessions";
+public class VoteApiRoute {
+    private static final String VOTE_URL_PATH = "/sessions/{session_id}/votes";
 
-    @Bean("sessionRoutes")
-    public RouterFunction<ServerResponse> makeSessionRoutes(final CreateSessionHandle createSessionHandle) {
+    @Bean("voteRoutes")
+    public RouterFunction<ServerResponse> makeVoteRoutes(final CreateVoteHandle createVoteHandle) {
         return RouterFunctions.route(
-                RequestPredicates.POST(SESSION_URL_PATH)
+                RequestPredicates.POST(VOTE_URL_PATH)
                         .and(RequestPredicates.contentType(MediaType.APPLICATION_JSON))
                         .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                createSessionHandle::createSession);
+                createVoteHandle::createVote);
     }
 }

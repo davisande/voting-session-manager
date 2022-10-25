@@ -28,7 +28,7 @@ public class CreateSessionHandle {
     }
 
     private SessionDataTransfer setSessionTopicId(final SessionDataTransfer sessionDataTransfer, final ServerRequest serverRequest) {
-        final Integer topicId = Integer.valueOf(serverRequest.pathVariable("id"));
+        final Integer topicId = Integer.valueOf(serverRequest.pathVariable("topic_id"));
         sessionDataTransfer.setTopicId(topicId);
 
         return sessionDataTransfer;
