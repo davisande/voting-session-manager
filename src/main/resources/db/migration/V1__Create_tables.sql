@@ -25,6 +25,6 @@ CREATE TABLE IF NOT EXISTS votes (
     option VARCHAR(15) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP,
-    CONSTRAINT votes_pk PRIMARY KEY (session_id),
+    CONSTRAINT votes_pk PRIMARY KEY (vote_id),
     CONSTRAINT votes_sessions_fk FOREIGN KEY (session_id) REFERENCES sessions(session_id)
 );

@@ -8,6 +8,7 @@ import br.com.challenge.votingsessionmanager.core.votes.mapper.VoteMapper;
 import br.com.challenge.votingsessionmanager.core.votes.port.CreateVoteInputPort;
 import br.com.challenge.votingsessionmanager.core.votes.port.CreateVoteOutputPort;
 import br.com.challenge.votingsessionmanager.core.votes.port.FindVoteOutputPort;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class CreateVoteUseCase implements CreateVoteInputPort {
     private final FindVoteOutputPort findVoteOutputPort;
     private final CreateVoteOutputPort createVoteOutputPort;
 
-    @Override public Mono<VoteDataTransfer> createVote(final VoteDataTransfer voteDataTransfer) {
+    @Override public Mono<VoteDataTransfer> createVote(@NonNull final VoteDataTransfer voteDataTransfer) {
         log.info("Creating vote: " + voteDataTransfer);
 
         return Mono.just(voteDataTransfer)

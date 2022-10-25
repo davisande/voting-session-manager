@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum OptionVoteEnum {
-    SIM("Sim"), NAO("Não");
+    YES("Yes"), NO("No");
 
     private final String description;
 }
