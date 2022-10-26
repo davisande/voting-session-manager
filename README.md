@@ -11,6 +11,7 @@ Desafio técnico para desenvolver uma aplicação gerenciadora de sessões de vo
 - Executar teste de performance.
 - Implementar versionament de API.
 - Melhorar o código, com a melhor utilização da assincronicidade do Webflux.
+- Realizar configuração para que o banco de dados seja criado automaticamente pela aplicação.
 
 ### Como rodar a aplicacação
 É necessário ter o JDK 17 ou superior configurado na máquina, o Git, o Gradle e o Dcoker para rodar o projeto.
@@ -29,6 +30,10 @@ Execute o Gradle na pasta do projeto
 Considerando que já tenha o Docker configurado, acesse a pasta do projeto no terminal e execute o seguinte comando
 ```bash
   docker compose up -d
+```
+Crie um banco de dados com o seguinte nome no PostgreSQL (temporário enquanto não é feita a configuração para que o banco seja criado automaticamente)
+```bash
+  voting-session-manager
 ```
 Na pasta do projeto execute o seguinte comando para subir a aplicacação
 ```bash

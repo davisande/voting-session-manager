@@ -1,6 +1,7 @@
 package br.com.challenge.votingsessionmanager.core.session.usecase;
 
 import br.com.challenge.votingsessionmanager.core.exception.UnexpectedErrorException;
+import br.com.challenge.votingsessionmanager.core.session.datatransfer.CreateSessionDataTransfer;
 import br.com.challenge.votingsessionmanager.core.session.datatransfer.SessionDataTransfer;
 import br.com.challenge.votingsessionmanager.core.session.domain.Session;
 import br.com.challenge.votingsessionmanager.core.session.mapper.SessionMapper;
@@ -20,11 +21,12 @@ public class CreateSessionUseCase implements CreateSessionInputPort {
     private final CreateSessionOutputPort createSessionOutputPort;
 
     @Override
-    public Mono<SessionDataTransfer> createSession(@NonNull final SessionDataTransfer sessionDataTransfer) {
-        log.info("Creating session: " + sessionDataTransfer);
+    public Mono<SessionDataTransfer> createSession(@NonNull final Integer topicId,
+                                                   @NonNull final CreateSessionDataTransfer createSessionDataTransfer) {
+        log.info("Creating session: [topicId: %s, createSessionDataTransfer: %s]", topicId, createSessionDataTransfer);
 
-        return Mono.just(sessionDataTransfer)
-                .map(sessionMapper::sessionDataTransferToSession)
+        return Mono.just(createSessionDataTransfer)
+                .map(dt -> sessionMapper.createSessionDataTransferToSession(topicId, dt))
                 .map(Session::defineSessionOpenTime)
                 .flatMap(createSessionOutputPort::create)
                 .map(sessionMapper::sessionToSessionDataTransfer)
