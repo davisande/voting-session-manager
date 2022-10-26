@@ -1,7 +1,13 @@
 package br.com.challenge.votingsessionmanager.core.votes.usecase;
 
+import java.util.Objects;
+
 import br.com.challenge.votingsessionmanager.core.exception.BusinessRuleException;
 import br.com.challenge.votingsessionmanager.core.exception.UnexpectedErrorException;
+import br.com.challenge.votingsessionmanager.core.session.domain.Session;
+import br.com.challenge.votingsessionmanager.core.session.mapper.SessionMapper;
+import br.com.challenge.votingsessionmanager.core.session.port.FindSessionOutputPort;
+import br.com.challenge.votingsessionmanager.core.votes.datatransfer.CreateVoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.domain.Vote;
 import br.com.challenge.votingsessionmanager.core.votes.mapper.VoteMapper;
@@ -19,36 +25,41 @@ import reactor.core.publisher.Mono;
 @Service
 public class CreateVoteUseCase implements CreateVoteInputPort {
     private final VoteMapper voteMapper;
+    private final SessionMapper sessionMapper;
+    private final FindSessionOutputPort findSessionOutputPort;
     private final FindVoteOutputPort findVoteOutputPort;
     private final CreateVoteOutputPort createVoteOutputPort;
 
-    @Override public Mono<VoteDataTransfer> createVote(@NonNull final VoteDataTransfer voteDataTransfer) {
-        log.info("Creating vote: " + voteDataTransfer);
+    @Override
+    public Mono<VoteDataTransfer> createVote(@NonNull final CreateVoteDataTransfer createVoteDataTransfer) {
+        log.info("Creating vote: " + createVoteDataTransfer);
 
-        return Mono.just(voteDataTransfer)
-                .map(voteMapper::voteDataTransferToVote)
+        return Mono.just(createVoteDataTransfer)
+                .flatMap(this::validateSessionOpen)
+                .map(voteMapper::createVoteDataTransferToVote)
                 .flatMap(this::validateAffiliateVote)
                 .flatMap(createVoteOutputPort::create)
-                .map(voteMapper::voteToVoteDataTransfer)
                 .log()
                 .onErrorMap(this::defineError);
     }
 
-    private Mono<Vote> validateAffiliateVote(final Vote vote) {
-        return Mono.just(vote.getAffiliateId())
-                .flatMap(findVoteOutputPort::findByAffiliateId)
-                .map(this::performValidation)
-                .map(v -> vote)
-                .log()
-                .onErrorMap(e -> new BusinessRuleException("Affiliate already voted"));
+    private Mono<CreateVoteDataTransfer> validateSessionOpen(final CreateVoteDataTransfer createVoteDataTransfer) {
+        return Mono.just(createVoteDataTransfer)
+                .map(CreateVoteDataTransfer::getSessionId)
+                .flatMap(findSessionOutputPort::findById)
+                .map(sessionMapper::sessionDataTransferToSession)
+                .filter(Session::isSessionOpen)
+                .map(s -> createVoteDataTransfer)
+                .switchIfEmpty(Mono.error(new BusinessRuleException("The session is closed")));
     }
 
-    private Vote performValidation(final Vote vote) {
-        if (!vote.isValidVote()) {
-            throw new BusinessRuleException("Affiliate already voted");
-        }
-
-        return vote;
+    private Mono<VoteDataTransfer> validateAffiliateVote(final VoteDataTransfer voteDataTransfer) {
+        return findVoteOutputPort.findBySessionIdAffiliateId(voteDataTransfer.getSessionId(),
+                                                             voteDataTransfer.getAffiliateId())
+                .hasElement()
+                .filter(Boolean.FALSE::equals)
+                .map(b -> voteDataTransfer)
+                .switchIfEmpty(Mono.error(new BusinessRuleException("The affiliate already voted")));
     }
 
     private Throwable defineError(final Throwable exception) {

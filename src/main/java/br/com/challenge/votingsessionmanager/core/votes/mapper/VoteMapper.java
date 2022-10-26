@@ -1,5 +1,6 @@
 package br.com.challenge.votingsessionmanager.core.votes.mapper;
 
+import br.com.challenge.votingsessionmanager.core.votes.datatransfer.CreateVoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteResultDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.domain.Vote;
@@ -9,6 +10,8 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface VoteMapper {
+
+    VoteDataTransfer createVoteDataTransferToVote(CreateVoteDataTransfer createVoteDataTransfer);
 
     Vote voteDataTransferToVote(VoteDataTransfer voteDataTransfer);
 

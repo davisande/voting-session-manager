@@ -30,4 +30,12 @@ public class Session {
 
         return this;
     }
+
+    public boolean isSessionOpen() {
+        final var currentDate = LocalDateTime.now();
+        final var isEqualsAfterStartDate = currentDate.equals(startDate) || currentDate.isAfter(startDate);
+        final var isEqualsBeforeEndDate = currentDate.equals(endDate) || currentDate.isBefore(endDate);
+
+        return isEqualsAfterStartDate && isEqualsBeforeEndDate;
+    }
 }

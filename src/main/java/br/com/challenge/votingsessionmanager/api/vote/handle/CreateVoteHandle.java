@@ -1,5 +1,6 @@
 package br.com.challenge.votingsessionmanager.api.vote.handle;
 
+import br.com.challenge.votingsessionmanager.core.votes.datatransfer.CreateVoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.port.CreateVoteInputPort;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +22,17 @@ public class CreateVoteHandle {
     }
 
     private Mono<VoteDataTransfer> performVoteCreation(final ServerRequest serverRequest) {
-        return serverRequest.bodyToMono(VoteDataTransfer.class)
-                .map(voteDataTransfer -> setVoteTopicId(voteDataTransfer, serverRequest))
+        return serverRequest.bodyToMono(CreateVoteDataTransfer.class)
+                .map(createVoteDataTransfer -> setVoteTopicId(createVoteDataTransfer, serverRequest))
                 .flatMap(createVoteInputPort::createVote)
                 .log();
     }
 
-    private VoteDataTransfer setVoteTopicId(final VoteDataTransfer voteDataTransfer, final ServerRequest serverRequest) {
+    private CreateVoteDataTransfer setVoteTopicId(final CreateVoteDataTransfer createVoteDataTransfer,
+                                                  final ServerRequest serverRequest) {
         final Integer sessionId = Integer.valueOf(serverRequest.pathVariable("session_id"));
-        voteDataTransfer.setSessionId(sessionId);
+        createVoteDataTransfer.setSessionId(sessionId);
 
-        return voteDataTransfer;
+        return createVoteDataTransfer;
     }
 }

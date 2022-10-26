@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VoteRepository extends CrudRepository<VoteEntity, Integer> {
 
-    Optional<VoteEntity> findByAffiliateId(Integer affiliateId);
+    @Query("SELECT v FROM VoteEntity v WHERE v.session.sessionId = :sessionId and v.affiliateId = :affiliateId")
+    Optional<VoteEntity> findBySessionIdAndAffiliateId(@Param("sessionId") Integer sessionId,
+                                                       @Param("affiliateId") Integer affiliateId);
 
     @Query("SELECT v.session.sessionId AS sessionId, v.option AS option, COUNT(v.option) AS amountVotes " +
             "FROM VoteEntity AS v " +

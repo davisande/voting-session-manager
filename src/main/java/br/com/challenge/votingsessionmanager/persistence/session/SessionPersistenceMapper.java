@@ -1,5 +1,6 @@
 package br.com.challenge.votingsessionmanager.persistence.session;
 
+import br.com.challenge.votingsessionmanager.core.session.datatransfer.SessionDataTransfer;
 import br.com.challenge.votingsessionmanager.core.session.domain.Session;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,5 +14,8 @@ public interface SessionPersistenceMapper {
 
     @Mapping(target = "topicId", source = "topic.topicId")
     Session sessionEntityToSession(SessionEntity sessionEntity);
+
+    @Mapping(target = "topicId", source = "topic.topicId")
+    SessionDataTransfer sessionEntityToSessionDataTransfer(SessionEntity sessionEntity);
 
 }

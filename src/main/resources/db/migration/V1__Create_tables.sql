@@ -21,10 +21,11 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE TABLE IF NOT EXISTS votes (
     vote_id serial NOT NULL,
     session_id INT NOT NULL,
-    affiliate_id INT NOT NULL UNIQUE,
+    affiliate_id INT NOT NULL,
     option VARCHAR(15) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP,
     CONSTRAINT votes_pk PRIMARY KEY (vote_id),
-    CONSTRAINT votes_sessions_fk FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+    CONSTRAINT votes_sessions_fk FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+    CONSTRAINT sessions_affiliates_uq UNIQUE(session_id, affiliate_id)
 );
