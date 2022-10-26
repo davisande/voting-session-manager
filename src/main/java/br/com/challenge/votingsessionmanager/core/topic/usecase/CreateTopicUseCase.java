@@ -1,6 +1,7 @@
 package br.com.challenge.votingsessionmanager.core.topic.usecase;
 
 import br.com.challenge.votingsessionmanager.core.exception.UnexpectedErrorException;
+import br.com.challenge.votingsessionmanager.core.topic.datatransfer.CreateTopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.datatransfer.TopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.mapper.TopicMapper;
 import br.com.challenge.votingsessionmanager.core.topic.port.CreateTopicInputPort;
@@ -18,11 +19,11 @@ public class CreateTopicUseCase implements CreateTopicInputPort {
     private final TopicMapper topicMapper;
     private final CreateTopicOutputPort createTopicOutputPort;
 
-    public Mono<TopicDataTransfer> createTopic(@NonNull final TopicDataTransfer topicDataTransfer) {
-        log.info("Creating topic: " + topicDataTransfer);
+    public Mono<TopicDataTransfer> createTopic(@NonNull final CreateTopicDataTransfer createTopicDataTransfer) {
+        log.info("Creating topic: " + createTopicDataTransfer);
 
-        return Mono.just(topicDataTransfer)
-                .map(topicMapper::topicDataTransferToTopic)
+        return Mono.just(createTopicDataTransfer)
+                .map(topicMapper::createTopicDataTransferToTopic)
                 .flatMap(createTopicOutputPort::create)
                 .map(topicMapper::topicToTopicDataTransfer)
                 .log()

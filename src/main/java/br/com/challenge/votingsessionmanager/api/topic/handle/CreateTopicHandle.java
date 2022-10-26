@@ -1,5 +1,6 @@
 package br.com.challenge.votingsessionmanager.api.topic.handle;
 
+import br.com.challenge.votingsessionmanager.core.topic.datatransfer.CreateTopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.datatransfer.TopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.port.CreateTopicInputPort;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class CreateTopicHandle {
     }
 
     private Mono<TopicDataTransfer> performTopicCreation(final ServerRequest serverRequest) {
-        return serverRequest.bodyToMono(TopicDataTransfer.class)
+        return serverRequest.bodyToMono(CreateTopicDataTransfer.class)
                 .flatMap(createTopicInputPort::createTopic)
                 .log();
     }

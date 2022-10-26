@@ -8,12 +8,6 @@ public class TopicDataTransferMockBuilder {
     private static final Integer TOPIC_ID = 1;
     public static final String TOPIC_DESCRIPTION = "Description test";
 
-    public static TopicDataTransfer buildCreationMock(final String description) {
-        return TopicDataTransfer.builder()
-                .description(description)
-                .build();
-    }
-
     public static TopicDataTransfer buildCompleteMock(final String description, final LocalDateTime currentDate) {
         return TopicDataTransfer.builder()
                 .topicId(TOPIC_ID)

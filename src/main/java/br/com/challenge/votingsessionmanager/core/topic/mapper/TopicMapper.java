@@ -1,14 +1,15 @@
 package br.com.challenge.votingsessionmanager.core.topic.mapper;
 
+import br.com.challenge.votingsessionmanager.core.topic.datatransfer.CreateTopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.datatransfer.TopicDataTransfer;
 import br.com.challenge.votingsessionmanager.core.topic.domain.Topic;
-import br.com.challenge.votingsessionmanager.persistence.topic.TopicEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TopicMapper {
 
-    Topic topicDataTransferToTopic(TopicDataTransfer topicDataTransfer);
+    Topic createTopicDataTransferToTopic(CreateTopicDataTransfer createTopicDataTransfer);
 
     TopicDataTransfer topicToTopicDataTransfer(Topic topic);
 
