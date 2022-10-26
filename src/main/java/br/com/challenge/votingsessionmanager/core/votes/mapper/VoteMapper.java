@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface VoteMapper {
 
-    VoteDataTransfer createVoteDataTransferToVote(CreateVoteDataTransfer createVoteDataTransfer);
+    VoteDataTransfer createVoteDataTransferToVote(Integer sessionId, CreateVoteDataTransfer createVoteDataTransfer);
 
     Vote voteDataTransferToVote(VoteDataTransfer voteDataTransfer);
 

@@ -1,15 +1,16 @@
 package br.com.challenge.votingsessionmanager.api.vote;
 
-import br.com.challenge.votingsessionmanager.api.session.handle.CreateSessionHandle;
 import br.com.challenge.votingsessionmanager.api.vote.handle.CreateVoteHandle;
 import br.com.challenge.votingsessionmanager.api.vote.handle.VoteResultHandle;
-import br.com.challenge.votingsessionmanager.core.session.datatransfer.SessionDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.CreateVoteDataTransfer;
+import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteDataTransfer;
+import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteResultDataTransfer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.RouterOperation;
@@ -33,19 +34,47 @@ public class VoteApiRoute {
     private final VoteResultHandle voteResultHandle;
 
     @RouterOperations({
-        @RouterOperation(path = VOTE_URL_PATH, produces = {
-            MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.POST, beanClass = CreateVoteHandle.class, beanMethod = "createVote",
-            operation = @Operation(operationId = "createVote", responses = {
-                    @ApiResponse(responseCode = "200", description = "successful operation",
-                            content = @Content(schema = @Schema(implementation = CreateVoteDataTransfer.class)))}
-            )),
-        @RouterOperation(path = VOTING_RESULT_URL_PATH, produces = {
-            MediaType.APPLICATION_JSON_VALUE},
-            beanClass = VoteResultHandle.class, method = RequestMethod.GET, beanMethod = "getVoteResult",
-            operation = @Operation(operationId = "getVoteResult", responses = {
-                    @ApiResponse(responseCode = "200", description = "successful operation")},
-                    parameters = {@Parameter(in = ParameterIn.QUERY, name = "session_id")}
-            ))
+            @RouterOperation(path = VOTE_URL_PATH, produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.POST,
+                    beanClass = CreateVoteHandle.class, beanMethod = "createVote",
+                    operation = @Operation(
+                            summary = "Create Vote",
+                            description = "Create Vote",
+                            operationId = "createVote",
+                            parameters = {
+                                    @Parameter(in = ParameterIn.PATH, name = "session_id")
+                            },
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(implementation = CreateVoteDataTransfer.class))
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(implementation = VoteDataTransfer.class))
+                                    )
+                            }
+                    )
+            ),
+            @RouterOperation(path = VOTING_RESULT_URL_PATH, produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.GET,
+                    beanClass = VoteResultHandle.class, beanMethod = "getVoteResult",
+                    operation = @Operation(
+                            summary = "Get Vote Result",
+                            description = "Get Vote Result",
+                            operationId = "getVoteResult",
+                            parameters = {
+                                    @Parameter(in = ParameterIn.PATH, name = "session_id")
+                            },
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "successful operation",
+                                            content = @Content(schema = @Schema(implementation = VoteResultDataTransfer.class))
+                                    )
+                            }
+                    )
+            )
     })
     @Bean("voteRoutes")
     public RouterFunction<ServerResponse> makeVoteRoutes() {

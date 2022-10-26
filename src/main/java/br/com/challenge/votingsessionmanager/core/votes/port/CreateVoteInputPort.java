@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface CreateVoteInputPort {
 
-    Mono<VoteDataTransfer> createVote(CreateVoteDataTransfer createVoteDataTransfer);
+    Mono<VoteDataTransfer> createVote(Integer sessionId, CreateVoteDataTransfer createVoteDataTransfer);
 
 }

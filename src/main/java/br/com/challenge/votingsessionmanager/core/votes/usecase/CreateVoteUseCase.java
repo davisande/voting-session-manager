@@ -1,7 +1,5 @@
 package br.com.challenge.votingsessionmanager.core.votes.usecase;
 
-import java.util.Objects;
-
 import br.com.challenge.votingsessionmanager.core.exception.BusinessRuleException;
 import br.com.challenge.votingsessionmanager.core.exception.UnexpectedErrorException;
 import br.com.challenge.votingsessionmanager.core.session.domain.Session;
@@ -9,7 +7,6 @@ import br.com.challenge.votingsessionmanager.core.session.mapper.SessionMapper;
 import br.com.challenge.votingsessionmanager.core.session.port.FindSessionOutputPort;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.CreateVoteDataTransfer;
 import br.com.challenge.votingsessionmanager.core.votes.datatransfer.VoteDataTransfer;
-import br.com.challenge.votingsessionmanager.core.votes.domain.Vote;
 import br.com.challenge.votingsessionmanager.core.votes.mapper.VoteMapper;
 import br.com.challenge.votingsessionmanager.core.votes.port.CreateVoteInputPort;
 import br.com.challenge.votingsessionmanager.core.votes.port.CreateVoteOutputPort;
@@ -31,21 +28,22 @@ public class CreateVoteUseCase implements CreateVoteInputPort {
     private final CreateVoteOutputPort createVoteOutputPort;
 
     @Override
-    public Mono<VoteDataTransfer> createVote(@NonNull final CreateVoteDataTransfer createVoteDataTransfer) {
-        log.info("Creating vote: " + createVoteDataTransfer);
+    public Mono<VoteDataTransfer> createVote(@NonNull final Integer sessionId,
+                                             @NonNull final CreateVoteDataTransfer createVoteDataTransfer) {
+        log.info("Creating vote: [sessionId: %s, createVoteDataTransfer: %s]", sessionId,createVoteDataTransfer);
 
         return Mono.just(createVoteDataTransfer)
-                .flatMap(this::validateSessionOpen)
-                .map(voteMapper::createVoteDataTransferToVote)
+                .flatMap(dt -> this.validateSessionOpen(sessionId, dt))
+                .map(dt -> voteMapper.createVoteDataTransferToVote(sessionId, dt))
                 .flatMap(this::validateAffiliateVote)
                 .flatMap(createVoteOutputPort::create)
                 .log()
                 .onErrorMap(this::defineError);
     }
 
-    private Mono<CreateVoteDataTransfer> validateSessionOpen(final CreateVoteDataTransfer createVoteDataTransfer) {
-        return Mono.just(createVoteDataTransfer)
-                .map(CreateVoteDataTransfer::getSessionId)
+    private Mono<CreateVoteDataTransfer> validateSessionOpen(final Integer sessionId,
+                                                             final CreateVoteDataTransfer createVoteDataTransfer) {
+        return Mono.just(sessionId)
                 .flatMap(findSessionOutputPort::findById)
                 .map(sessionMapper::sessionDataTransferToSession)
                 .filter(Session::isSessionOpen)

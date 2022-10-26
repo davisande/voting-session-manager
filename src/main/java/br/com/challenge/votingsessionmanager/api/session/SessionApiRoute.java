@@ -1,10 +1,8 @@
 package br.com.challenge.votingsessionmanager.api.session;
 
 import br.com.challenge.votingsessionmanager.api.session.handle.CreateSessionHandle;
-import br.com.challenge.votingsessionmanager.api.topic.handle.CreateTopicHandle;
 import br.com.challenge.votingsessionmanager.core.session.datatransfer.CreateSessionDataTransfer;
 import br.com.challenge.votingsessionmanager.core.session.datatransfer.SessionDataTransfer;
-import br.com.challenge.votingsessionmanager.core.topic.datatransfer.TopicDataTransfer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -30,9 +28,11 @@ public class SessionApiRoute {
     @RouterOperations(
             @RouterOperation(
                     path = SESSION_URL_PATH, produces = {MediaType.APPLICATION_JSON_VALUE},
-                    beanClass = CreateSessionHandle.class,
-                    method = RequestMethod.POST,beanMethod = "createSession",
+                    method = RequestMethod.POST,
+                    beanClass = CreateSessionHandle.class, beanMethod = "createSession",
                     operation = @Operation(
+                            summary = "Create Session",
+                            description = "Create Session",
                             operationId = "createSession",
                             parameters = {
                                     @Parameter(in = ParameterIn.PATH, name = "topic_id")
@@ -44,7 +44,7 @@ public class SessionApiRoute {
                                 @ApiResponse(
                                         responseCode = "200",
                                         description = "successful operation",
-                                        content = @Content(schema = @Schema(implementation = CreateSessionDataTransfer.class))
+                                        content = @Content(schema = @Schema(implementation = SessionDataTransfer.class))
                                 )
                             }
                     )

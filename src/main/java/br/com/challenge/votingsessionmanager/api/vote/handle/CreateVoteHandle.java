@@ -23,16 +23,11 @@ public class CreateVoteHandle {
 
     private Mono<VoteDataTransfer> performVoteCreation(final ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateVoteDataTransfer.class)
-                .map(createVoteDataTransfer -> setVoteTopicId(createVoteDataTransfer, serverRequest))
-                .flatMap(createVoteInputPort::createVote)
+                .flatMap(createVoteDataTransfer ->
+                                 createVoteInputPort.createVote(Integer.valueOf(serverRequest.pathVariable("session_id")),
+                                                                createVoteDataTransfer)
+                )
                 .log();
     }
 
-    private CreateVoteDataTransfer setVoteTopicId(final CreateVoteDataTransfer createVoteDataTransfer,
-                                                  final ServerRequest serverRequest) {
-        final Integer sessionId = Integer.valueOf(serverRequest.pathVariable("session_id"));
-        createVoteDataTransfer.setSessionId(sessionId);
-
-        return createVoteDataTransfer;
-    }
 }
