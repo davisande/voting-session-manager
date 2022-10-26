@@ -7,4 +7,6 @@ spring:
     username: application
     password: application
 
+springdoc.api-docs.groups.enabled: true
+
 lombok.nonNull.exceptionType: IllegalArgumentException
