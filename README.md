@@ -3,7 +3,6 @@ Desafio técnico para desenvolver uma aplicação gerenciadora de sessões de vo
 
 ### Pendências e débitos técnicos
 - Tratamento global de exceções e consequente tramento das mensagens de erro dos endpoints (o handle foi configurado, mas não está filtrando as exceções).
-- Ajuste do objetos que mapeiam o body dos endpoints para conterem apenas os pâmetros exatos de entrada (importante também para o Swagger).
 - Implementar testes unitários para todos os usecases (foi implementado apenas para um useca, como amostragem).
 - Implementar testes de integração.
 - Implementar integração com sistema externo.
